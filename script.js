@@ -33,7 +33,7 @@ function obtenerTiempoTranscurrido() {
     return `${anios} Años ${dias} Días ${horas} Horas ${minutos} Minutos y ${segundos} Segundos juntos...`;
 }
 
-// Función para actualizar el contador en tiempo real (se llama después del tipeo)
+// Función para actualizar el contador en tiempo real
 function iniciarReloj() {
     setInterval(() => {
         document.getElementById('tiempo').innerText = obtenerTiempoTranscurrido();
@@ -51,11 +51,9 @@ function crearArbol() {
         const heart = document.createElement('div');
         heart.className = 'heart-leaf';
         
-        // Asignar color aleatorio
         const colorAleatorio = COLORES_CORAZON[Math.floor(Math.random() * COLORES_CORAZON.length)];
         heart.style.backgroundColor = colorAleatorio;
 
-        // Fórmula del corazón
         const t = Math.random() * Math.PI * 2;
         const r = Math.sqrt(Math.random()) * 8; 
         let x = 16 * Math.pow(Math.sin(t), 3);
@@ -82,7 +80,6 @@ function typeWriter(texto, elementoId, velocidad, callback) {
     const elemento = document.getElementById(elementoId);
     elemento.innerHTML = "";
     
-    // Hacemos visible el contenedor padre
     if(elementoId === 'tiempo') {
         document.getElementById('contador-container').classList.remove('hidden');
         document.getElementById('contador-container').classList.add('visible');
@@ -104,29 +101,30 @@ function typeWriter(texto, elementoId, velocidad, callback) {
     tipear();
 }
 
-// --- INICIO CONTROLADO ---
+// --- INICIO CONTROLADO (Lógica Principal) ---
 const btnComenzar = document.getElementById('btn-comenzar');
 const overlay = document.getElementById('overlay');
 const audio = document.getElementById('musica');
 
-btnComenzar.addEventListener('click', () => {
-    // 1. Ocultar la cortina suavemente
-    overlay.classList.add('oculto');
-    
-    // 2. Reproducir música (Ahora sí funcionará 100% seguro)
-    audio.volume = 0.3;
-    audio.play().catch(error => console.log("Error al reproducir:", error));
+if (btnComenzar) {
+    btnComenzar.addEventListener('click', () => {
+        // 1. Ocultar la cortina
+        overlay.classList.add('oculto');
+        
+        // 2. Reproducir música
+        audio.volume = 0.3;
+        audio.play().catch(error => console.log("Error al reproducir:", error));
 
-    // 3. INICIAR LA SECUENCIA DE ANIMACIÓN
-    iniciarSecuencia();
-});
+        // 3. INICIAR SECUENCIA
+        iniciarSecuencia();
+    });
+}
 
-// Función maestra que arranca todo (antes estaba en window.onload)
+// Función maestra
 function iniciarSecuencia() {
-    // 1. Árbol y Hojas
     crearArbol();
 
-    // 2. Título (Aparece a los 6s)
+    // Títulos a los 6s
     setTimeout(() => {
         const titulo = document.getElementById('titulo');
         const titulo_2 = document.getElementById('titulo_2');
@@ -135,16 +133,14 @@ function iniciarSecuencia() {
         titulo_2.classList.remove('hidden');
         titulo_2.classList.add('visible');
         
-        // 3. Escribir Mensaje
+        // Mensaje a los 7s
         setTimeout(() => {
             typeWriter(MENSAJE, 'mensaje-texto', 50, () => {
                 
-                // 4. Escribir Contador
+                // Contador
                 const tiempoInicial = obtenerTiempoTranscurrido();
-                
                 setTimeout(() => {
                     typeWriter(tiempoInicial, 'tiempo', 50, () => {
-                        // 5. Activar reloj y Firma
                         iniciarReloj();
                         const firma = document.getElementById('firma');
                         const firma_2 = document.getElementById('firma_2');
@@ -184,28 +180,3 @@ function crearPetalo() {
     setTimeout(() => petalo.remove(), duracion * 1000);
 }
 setInterval(crearPetalo, 400);
-
-// --- CONTROL DE MÚSICA DE FONDO ---
-window.addEventListener('load', () => {
-    const audio = document.getElementById('musica');
-    
-    // Ajustar volumen suave (30% para que no tape tu voz si le hablas)
-    audio.volume = 0.3; 
-
-    // Intentar reproducir automáticamente
-    const promesa = audio.play();
-
-    if (promesa !== undefined) {
-        promesa.catch(error => {
-            console.log("Autoplay bloqueado por el navegador. Esperando interacción.");
-            
-            // Si falla, agregar un detector de clic en TODA la página
-            // La música sonará apenas ella toque la pantalla o haga clic en cualquier lado
-            document.body.addEventListener('click', () => {
-                audio.play();
-                audio.volume = 0.3;
-            }, { once: true });
-        });
-    }
-
-});
