@@ -168,3 +168,27 @@ function crearPetalo() {
     setTimeout(() => petalo.remove(), duracion * 1000);
 }
 setInterval(crearPetalo, 400);
+
+// --- CONTROL DE MÚSICA DE FONDO ---
+window.addEventListener('load', () => {
+    const audio = document.getElementById('musica');
+    
+    // Ajustar volumen suave (30% para que no tape tu voz si le hablas)
+    audio.volume = 0.3; 
+
+    // Intentar reproducir automáticamente
+    const promesa = audio.play();
+
+    if (promesa !== undefined) {
+        promesa.catch(error => {
+            console.log("Autoplay bloqueado por el navegador. Esperando interacción.");
+            
+            // Si falla, agregar un detector de clic en TODA la página
+            // La música sonará apenas ella toque la pantalla o haga clic en cualquier lado
+            document.body.addEventListener('click', () => {
+                audio.play();
+                audio.volume = 0.3;
+            }, { once: true });
+        });
+    }
+});
