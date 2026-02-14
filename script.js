@@ -104,9 +104,26 @@ function typeWriter(texto, elementoId, velocidad, callback) {
     tipear();
 }
 
-// --- SECUENCIA MAESTRA ---
-window.onload = function() {
-    // 1. Árbol y Hojas (CSS handlea el inicio)
+// --- INICIO CONTROLADO ---
+const btnComenzar = document.getElementById('btn-comenzar');
+const overlay = document.getElementById('overlay');
+const audio = document.getElementById('musica');
+
+btnComenzar.addEventListener('click', () => {
+    // 1. Ocultar la cortina suavemente
+    overlay.classList.add('oculto');
+    
+    // 2. Reproducir música (Ahora sí funcionará 100% seguro)
+    audio.volume = 0.3;
+    audio.play().catch(error => console.log("Error al reproducir:", error));
+
+    // 3. INICIAR LA SECUENCIA DE ANIMACIÓN
+    iniciarSecuencia();
+});
+
+// Función maestra que arranca todo (antes estaba en window.onload)
+function iniciarSecuencia() {
+    // 1. Árbol y Hojas
     crearArbol();
 
     // 2. Título (Aparece a los 6s)
@@ -118,17 +135,16 @@ window.onload = function() {
         titulo_2.classList.remove('hidden');
         titulo_2.classList.add('visible');
         
-        // 3. Escribir Mensaje (A los 7s)
+        // 3. Escribir Mensaje
         setTimeout(() => {
             typeWriter(MENSAJE, 'mensaje-texto', 50, () => {
                 
-                // 4. Escribir Contador (Cuando termine el mensaje)
-                // Calculamos el tiempo una vez para el efecto tipeo
+                // 4. Escribir Contador
                 const tiempoInicial = obtenerTiempoTranscurrido();
                 
                 setTimeout(() => {
                     typeWriter(tiempoInicial, 'tiempo', 50, () => {
-                        // 5. Activar reloj en tiempo real y Firma
+                        // 5. Activar reloj y Firma
                         iniciarReloj();
                         const firma = document.getElementById('firma');
                         const firma_2 = document.getElementById('firma_2');
@@ -142,7 +158,7 @@ window.onload = function() {
         }, 1000);
 
     }, 6000); 
-};
+}
 
 // --- PÉTALOS DE FONDO ---
 function crearPetalo() {
@@ -191,4 +207,5 @@ window.addEventListener('load', () => {
             }, { once: true });
         });
     }
+
 });
