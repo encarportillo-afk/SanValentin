@@ -1,0 +1,155 @@
+body {
+    background-color: #fdf0f0;
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace; /* Fuente estilo máquina de escribir */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    width: 90%;
+    max-width: 900px;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+/* --- Panel de Texto --- */
+.message-container {
+    flex: 1;
+    text-align: left;
+    min-width: 300px;
+    z-index: 10;
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden; /* Importante para que no ocupe espacio visualmente si no quieres */
+}
+
+.visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 1s ease;
+}
+
+h2 { 
+    color: #b71c1c; /* Rojo oscuro elegante */
+    margin-bottom: 20px; 
+}
+
+p { 
+    color: #555; 
+    font-size: 1.1rem; 
+    line-height: 1.6; 
+    min-height: 60px; 
+}
+
+/* NUEVO: Contador en color Marrón */
+#contador-container { 
+    margin: 30px 0; 
+    font-weight: bold; 
+    color: #8d6e63; /* Marrón suave (mismo tono que el tronco) */
+    font-size: 1.1rem; 
+    min-height: 30px;
+}
+
+h3 { 
+    color: #b71c1c; 
+    margin-top: 20px; 
+}
+
+/* --- Panel del Árbol --- */
+.tree-panel {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    height: 400px;
+    position: relative;
+}
+
+#tree-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+/* Tronco y Ramas */
+.trunk {
+    width: 12px;
+    height: 0;
+    background: #8d6e63;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 0;
+    animation: growTrunk 2s ease-out forwards;
+}
+
+.branch {
+    position: absolute;
+    background: #8d6e63;
+    height: 0;
+    width: 8px;
+    bottom: 100px;
+    border-radius: 10px;
+}
+
+.branch-left {
+    left: 50%;
+    transform: translateX(-50%) rotate(-25deg);
+    transform-origin: bottom center;
+    animation: growBranch 1.5s ease-out 2s forwards;
+}
+
+.branch-right {
+    left: 50%;
+    transform: translateX(-50%) rotate(25deg);
+    transform-origin: bottom center;
+    animation: growBranch 1.5s ease-out 2s forwards;
+}
+
+/* Hojas/Corazones - El color se define en JS ahora */
+.heart-leaf {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    opacity: 0;
+    transform: scale(0) rotate(-45deg);
+}
+
+.heart-leaf::after, .heart-leaf::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: inherit; /* Heredan el color del padre (set en JS) */
+    border-radius: 50%;
+}
+.heart-leaf::after { top: -6px; left: 0; }
+.heart-leaf::before { top: 0; left: 6px; }
+
+/* Animaciones */
+@keyframes growTrunk {
+    to { height: 150px; }
+}
+
+@keyframes growBranch {
+    to { height: 80px; }
+}
+
+@keyframes bloom {
+    0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+    100% { transform: scale(1) rotate(-45deg); opacity: 1; }
+}
